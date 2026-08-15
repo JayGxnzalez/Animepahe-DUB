@@ -293,7 +293,14 @@ async function extractStreamUrl(url) {
             return bRes - aRes;
         });
 
-        const finalResult = JSON.stringify({ streams: streams, subtitle: "" });
+        // Auto-pick highest quality: only the top-sorted stream is returned,
+        // so the app plays it directly instead of showing a quality picker.
+        const bestStream = streams.length > 0 ? [streams[0]] : [];
+        if (bestStream.length > 0) {
+            console.log("[Animepahe-DUB] Auto-selected quality: " + bestStream[0].title);
+        }
+
+        const finalResult = JSON.stringify({ streams: bestStream, subtitle: "" });
         console.log("[Animepahe-DUB] Final result: " + finalResult.substring(0, 300));
         return finalResult;
 
